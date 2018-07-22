@@ -12,7 +12,20 @@ module.exports = {
 
     '/articles/:page': (req, res) => {
         let page = parseInt(req.params.page)
-        Storage.getArticleList(page, 20).then(result => {
+        if (Number.isNaN(page)) {
+            res.status(500).send(`/articles/${req.params.page} is not a valid route`)
+        } else {
+            Storage.getArticleList(page, 20).then(result => {
+                res.json(result)
+            }).catch(error => {
+                res.status(500).send(`An error occured: ${error.message}`)
+            })
+        }
+    },
+
+    '/articles/gettylead/:page': (req, res) => {
+        let page = parseInt(req.params.page)
+        Storage.getArticleList(page, 20, true).then(result => {
             res.json(result)
         }).catch(error => {
             res.status(500).send(`An error occured: ${error.message}`)

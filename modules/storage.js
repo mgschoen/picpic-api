@@ -147,12 +147,13 @@ function getArticle (id) {
  * @param {number} pageSize number of articles per page
  * @returns {Promise} resolves to a paginated list of article objects
  */
-function getArticleList (page, pageSize) {
+function getArticleList (page, pageSize, gettyLead) {
     return new Promise((resolve, reject) => {
         initDatabase().then(db => {
 
             let collection = db.getCollection('articles')
-            let articles = collection.find()
+            let query = gettyLead ? { gettyMeta: true } : {}
+            let articles = collection.find(query)
             let windowWidth = pageSize || 20
             let window = paginate(articles, page, windowWidth)
             window.result = reduceArticleList(window.result)
