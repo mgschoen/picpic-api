@@ -6,16 +6,37 @@ module.exports = {
         Storage.getArticle(id).then(result => {
             res.json(result)
         }).catch(error => {
-            res.statusCode(500).send(`An error occured: ${error.message}`)
+            res.status(500).send(`An error occured: ${error.message}`)
         })
     },
 
     '/articles/:page': (req, res) => {
         let page = parseInt(req.params.page)
-        Storage.getArticleList(20, page).then(result => {
+        Storage.getArticleList(page, 20).then(result => {
             res.json(result)
         }).catch(error => {
-            res.statusCode(500).send(`An error occured: ${error.message}`)
+            res.status(500).send(`An error occured: ${error.message}`)
+        })
+    },
+
+    '/search/:term': (req, res) => {
+        let term = req.params.term
+        Storage.searchArticles(term).then(result => {
+            res.json(result)
+        }).catch(error => {
+            res.status(500).send(`An error occured: ${error.message}`)
+            console.log(error)
+        })
+    },
+
+    '/search/:term/:page': (req, res) => {
+        let term = req.params.term
+        let page = parseInt(req.params.page)
+        Storage.searchArticles(term, page).then(result => {
+            res.json(result)
+        }).catch(error => {
+            res.status(500).send(`An error occured: ${error.message}`)
+            console.log(error)
         })
     }
 }
