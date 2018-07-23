@@ -24,6 +24,13 @@ for (let arg in args) {
     }
 }
 
+// Enable CORS
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
+
 for (let route in routeConfig) {
     app.get(route, routeConfig[route])
 }
