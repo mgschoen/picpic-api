@@ -93,6 +93,7 @@ function paginate (array, page, pageSize) {
             next: ((pageSize * page) + pageSize) < array.length,
             itemsTotal: array.length,
             itemsInPage: resultSet.length,
+            pagesTotal: Math.ceil(array.length / pageSize),
             pageIndex: page
         },
         result: resultSet
