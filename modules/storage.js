@@ -7,6 +7,8 @@ const {
     STORAGE_REQUIRED_COLLECTIONS
 } = require('../config/main.config')
 
+let storagePath = process.env.PICPIC_STORAGE_PATH || STORAGE_PATH_DEFAULT
+
 /**
  * Connect to the Loki.js database at the location specified
  * in the config file
@@ -15,7 +17,7 @@ const {
 function initDatabase () {
     return new Promise((resolve, reject) => {
         let adapter = new lfsa()
-        let db = new Loki(STORAGE_PATH_DEFAULT + STORAGE_FILENAME, {
+        let db = new Loki(storagePath + STORAGE_FILENAME, {
             adapter: adapter
         })
         db.loadDatabase({}, err => {
