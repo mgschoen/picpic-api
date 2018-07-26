@@ -1,6 +1,14 @@
 let Storage = require('./storage')
 
 module.exports = {
+    '/stats': (req, res) => {
+        Storage.getStats().then(result => {
+            res.json(result)
+        }).catch(error => {
+            res.status(500).send(`An error occured: ${error.message}`)
+        })
+    },
+
     '/article/:id': (req, res) => {
         let id = parseInt(req.params.id)
         Storage.getArticle(id).then(result => {

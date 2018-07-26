@@ -1,5 +1,7 @@
-let Loki = require('lokijs')
+const fs = require('fs')
+const Loki = require('lokijs')
 const lfsa = require('../node_modules/lokijs/src/loki-fs-structured-adapter')
+const folderSize = require('get-folder-size')
 
 const { 
     STORAGE_PATH_DEFAULT,
@@ -194,8 +196,36 @@ function searchArticles (term, page, pageSize) {
     })
 }
 
+function getStats () {
+    return new Promise((resolve, reject) => {
+        initDatabase().then(db => {
+
+            let articles = db.getCollection('articles')
+            let keywords = db.getCollection('keywords')
+            folderSize(storagePath, (error, size) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve({
+                        articlesTotal: articles.count(),
+                        articlesGettyID: articles.find({containsGettyID: true}).length,
+                        articlesGettyLead: articles.find({containsGettyIDInLeadImage: true}).length,
+                        keywordsTotal: keywords.count(),
+                        storageSize: size,
+                        storageModified: fs.statSync(storagePath + STORAGE_FILENAME).mtimeMs
+                    })
+                }
+            })
+
+        }).catch(error => {
+            reject(error)
+        })
+    })
+}
+
 module.exports = {
     getArticle,
     getArticleList,
-    searchArticles
+    searchArticles,
+    getStats
 }
