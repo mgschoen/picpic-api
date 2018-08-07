@@ -1,4 +1,5 @@
 let Storage = require('./storage')
+let { matchKeywords, get2DPlotData } = require('./article-details')
 
 module.exports = {
     '/stats': (req, res) => {
@@ -13,6 +14,37 @@ module.exports = {
         let id = parseInt(req.params.id)
         Storage.getArticle(id).then(result => {
             res.json(result)
+        }).catch(error => {
+            res.status(500).send(`An error occured: ${error.message}`)
+        })
+    },
+
+    '/article/:id/match': (req, res) => {
+        let id = parseInt(req.params.id)
+        Storage.getArticle(id).then(async data => {
+            if (data.leadImage) {
+                let matcher = await matchKeywords(data)
+                res.json({
+                    stats: matcher.stats,
+                    matchedTerms: matcher.matchedTerms
+                })
+            } else {
+                res.status(500).send(`Cannot match image keywords for article $${id}: Article has no lead image.`)
+            }
+        }).catch(error => {
+            res.status(500).send(`An error occured: ${error.message}`)
+        })
+    },
+
+    '/article/:id/plot/fo-tf': (req, res) => {
+        let id = parseInt(req.params.id)
+        Storage.getArticle(id).then(async data => {
+            if (data.leadImage) {
+                let result = await get2DPlotData(data, 'firstOccurrence', 'termFrequency', 'stemmedTerm', true)
+                res.json(result)
+            } else {
+                res.status(500).send(`Cannot match image keywords for article $${id}: Article has no lead image.`)
+            }
         }).catch(error => {
             res.status(500).send(`An error occured: ${error.message}`)
         })
