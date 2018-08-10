@@ -13,8 +13,9 @@
   "dependencies": {
     "express": "^4.16.3",
     "get-folder-size": "^2.0.0",
+    "gettyimages-api": "^3.1.1",
     "lokijs": "^1.5.5",
     "minimist": "^1.2.0",
-    "picpic-core": "https://github.com/mgschoen/picpic-core.git#e4501665c0eb967aa0fcc7d0a0c969c03bb36911"
+    "picpic-core": "https://github.com/mgschoen/picpic-core.git#v0.1.1"
   }
 }

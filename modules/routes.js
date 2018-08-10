@@ -1,5 +1,23 @@
 let Storage = require('./storage')
-let { matchKeywords, get2DPlotData } = require('./article-details')
+let { matchKeywords, get2DPlotData, pickImageStatistical } = require('./article-details')
+
+let articlePicpicStat = (req, res) => {
+    let id = parseInt(req.params.id)
+    let threshold = parseFloat(req.params.threshold)
+    if (isNaN(threshold) || threshold < 0 || threshold > 1) {
+        threshold = 0.5
+    }
+    let sortOrder = req.params.sortorder || 'most_popular'
+    if (['best_match', 'most_popular', 'newest'].indexOf(sortOrder) < 0) {
+        sortOrder = 'most_popular'
+    }
+    Storage.getArticle(id).then(async result => {
+        let data = await pickImageStatistical(result, threshold, sortOrder)
+        res.json(data)
+    }).catch(error => {
+        res.status(500).send(`An error occured: ${error.message}`)
+    })
+}
 
 module.exports = {
     '/stats': (req, res) => {
@@ -49,6 +67,10 @@ module.exports = {
             res.status(500).send(`An error occured: ${error.message}`)
         })
     },
+
+    '/article/:id/picpic/stat': articlePicpicStat,
+    '/article/:id/picpic/stat/:threshold': articlePicpicStat,
+    '/article/:id/picpic/stat/:threshold/:sortorder': articlePicpicStat,
 
     '/articles/:page': (req, res) => {
         let page = parseInt(req.params.page)

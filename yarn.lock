@@ -391,6 +391,10 @@ get-stream@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-3.0.0.tgz#8e943d1358dc37555054ecbe2edb05aa174ede14"
 
+gettyimages-api@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/gettyimages-api/-/gettyimages-api-3.1.1.tgz#3455d39da7fba545efc68fede3c3bc9586e0f88d"
+
 has-flag@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"
@@ -616,9 +620,9 @@ path-to-regexp@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
 
-"picpic-core@https://github.com/mgschoen/picpic-core.git#e4501665c0eb967aa0fcc7d0a0c969c03bb36911":
-  version "0.0.0"
-  resolved "https://github.com/mgschoen/picpic-core.git#e4501665c0eb967aa0fcc7d0a0c969c03bb36911"
+"picpic-core@https://github.com/mgschoen/picpic-core.git#v0.1.1":
+  version "0.1.1"
+  resolved "https://github.com/mgschoen/picpic-core.git#c605f2c689957fdc1bd0a7a77331b5084e3429d5"
   dependencies:
     boxen "^1.3.0"
     cli-graph "^3.2.2"
