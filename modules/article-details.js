@@ -87,7 +87,7 @@ async function pickImageStatistical (articleData, threshold, sortOrder) {
         return {
             queryString,
             queryTerms: searchTermExtractor.getKeywords(),
-            image: {
+            image: !image ? null : {
                 id: image.id,
                 title: image.title,
                 caption: image.caption,
