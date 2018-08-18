@@ -1,15 +1,12 @@
+const config = require('config')
 const fs = require('fs')
 const Loki = require('lokijs')
 const lfsa = require('../node_modules/lokijs/src/loki-fs-structured-adapter')
 const folderSize = require('get-folder-size')
 
-const { 
-    STORAGE_PATH_DEFAULT,
-    STORAGE_FILENAME,
-    STORAGE_REQUIRED_COLLECTIONS
-} = require('../config/main.config')
-
-let storagePath = process.env.PICPIC_STORAGE_PATH || STORAGE_PATH_DEFAULT
+const STORAGE_PATH = config.get('storage.path') // need to add env var support?
+const STORAGE_FILENAME = config.get('storage.filename')
+const STORAGE_REQUIRED_COLLECTIONS = config.get('storage.requiredCollections')
 
 /**
  * Connect to the Loki.js database at the location specified
@@ -19,7 +16,7 @@ let storagePath = process.env.PICPIC_STORAGE_PATH || STORAGE_PATH_DEFAULT
 function initDatabase () {
     return new Promise((resolve, reject) => {
         let adapter = new lfsa()
-        let db = new Loki(storagePath + STORAGE_FILENAME, {
+        let db = new Loki(STORAGE_PATH + STORAGE_FILENAME, {
             adapter: adapter
         })
         db.loadDatabase({}, err => {
@@ -202,7 +199,7 @@ function getStats () {
 
             let articles = db.getCollection('articles')
             let keywords = db.getCollection('keywords')
-            folderSize(storagePath, (error, size) => {
+            folderSize(STORAGE_PATH, (error, size) => {
                 if (error) {
                     reject(error)
                 } else {
@@ -212,7 +209,7 @@ function getStats () {
                         articlesGettyLead: articles.find({containsGettyIDInLeadImage: true}).length,
                         keywordsTotal: keywords.count(),
                         storageSize: size,
-                        storageModified: fs.statSync(storagePath + STORAGE_FILENAME).mtimeMs
+                        storageModified: fs.statSync(STORAGE_PATH + STORAGE_FILENAME).mtimeMs
                     })
                 }
             })

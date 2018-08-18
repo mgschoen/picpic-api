@@ -1,3 +1,4 @@
+const config = require('config')
 const GettyClient = require('gettyimages-api')
 
 const { 
@@ -7,10 +8,9 @@ const {
     StatisticalSearchTermExtractor
 } = require('picpic-core')
 
-const { GETTYAPI_DEFAULT_FIELDS } = require('../config/main.config')
-
-const GETTYAPI_KEY = process.env.GETTYAPI_KEY
-const GETTYAPI_SECRET = process.env.GETTYAPI_SECRET
+const GETTYAPI_KEY = config.get('gettyAPI.key')
+const GETTYAPI_SECRET = config.get('gettyAPI.secret')
+const GETTYAPI_DEFAULT_FIELDS = config.get('gettyAPI.defaultFields')
 
 if (!GETTYAPI_KEY || !GETTYAPI_SECRET) {
     let LOGGER = new Logger('getty/api')

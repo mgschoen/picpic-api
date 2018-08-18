@@ -1,14 +1,11 @@
 const express = require('express')
 const app = express()
 const minimist = require('minimist')
+const config = require('config')
 
 const routeConfig = require('./modules/routes')
 
-const {
-    PORT_DEFAULT
-} = require('./config/main.config')
-
-let port = PORT_DEFAULT
+const PORT = config.get('port')
 
 let args = minimist(process.argv.slice(2)) || {}
 for (let arg in args) {
@@ -17,7 +14,7 @@ for (let arg in args) {
             break;
         case 'p':
         case 'port':
-            port = parseInt(args[arg])
+            PORT = parseInt(args[arg])
             break;
         default:
             console.log(`Unknown argument ${arg}`)
@@ -35,6 +32,6 @@ for (let route in routeConfig) {
     app.get(route, routeConfig[route])
 }
 
-app.listen(port, () => {
-    console.log(`Picpic API listening on port ${port}`)
+app.listen(PORT, () => {
+    console.log(`Picpic API listening on port ${PORT}`)
 })

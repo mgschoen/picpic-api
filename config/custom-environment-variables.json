@@ -1,0 +1,6 @@
+{
+    "gettyAPI": {
+        "key": "GETTYAPI_KEY",
+        "secret": "GETTYAPI_SECRET"
+    }
+}

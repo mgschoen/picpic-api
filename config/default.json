@@ -1,0 +1,23 @@
+{
+    "storage": {
+        "path": "../gettygetter/data/",
+        "filename": "storage.json",
+        "requiredCollections": [ "articles", "keywords" ]
+    },
+    "port": 27112,
+    "gettyAPI": {
+        "key": "",
+        "secret": "",
+        "defaultFields": [
+            "detail_set",
+            "comp",
+            "date_camera_shot",
+            "editorial_source",
+            "entity_details",
+            "keywords",
+            "people",
+            "preview",
+            "thumb"
+        ]
+    }
+}
