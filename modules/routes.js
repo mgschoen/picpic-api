@@ -1,8 +1,22 @@
-let Storage = require('./storage')
-let { matchKeywords, get2DPlotData, pickImageStatistical } = require('./article-details')
+const config = require('config')
 
-let articlePicpicStat = (req, res) => {
+const Storage = require('./storage')
+const { 
+    matchKeywords, 
+    get2DPlotData, 
+    pickImageStatistical,
+    pickImageMachineLearning
+} = require('./article-details')
+
+const VALID_APPROACHES = config.get('validApproaches')
+
+let articlePicpic = (req, res) => {
     let id = parseInt(req.params.id)
+    let approach = req.params.approach
+    if (VALID_APPROACHES.indexOf(approach) < 0) {
+        res.status(500).send(`"${approach}" is not a valid approach`)
+        return
+    }
     let threshold = parseFloat(req.params.threshold)
     if (isNaN(threshold) || threshold < 0 || threshold > 1) {
         threshold = 0.5
@@ -12,7 +26,15 @@ let articlePicpicStat = (req, res) => {
         sortOrder = 'most_popular'
     }
     Storage.getArticle(id).then(async result => {
-        let data = await pickImageStatistical(result, threshold, sortOrder)
+        let data
+        switch (approach) {
+            case 'ml':
+                data = await pickImageMachineLearning(result, threshold, sortOrder)
+                break
+            case 'stat':
+            default:
+                data = await pickImageStatistical(result, threshold, sortOrder)
+        }
         res.json(data)
     }).catch(error => {
         res.status(500).send(`An error occured: ${error.message}`)
@@ -68,9 +90,9 @@ module.exports = {
         })
     },
 
-    '/article/:id/picpic/stat': articlePicpicStat,
-    '/article/:id/picpic/stat/:threshold': articlePicpicStat,
-    '/article/:id/picpic/stat/:threshold/:sortorder': articlePicpicStat,
+    '/article/:id/picpic/:approach': articlePicpic,
+    '/article/:id/picpic/:approach/:threshold': articlePicpic,
+    '/article/:id/picpic/:approach/:threshold/:sortorder': articlePicpic,
 
     '/articles/:page': (req, res) => {
         let page = parseInt(req.params.page)

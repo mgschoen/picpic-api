@@ -5,7 +5,8 @@ const {
     ArticlePreprocessor, 
     KeywordsPreprocessor, 
     Matcher,
-    StatisticalSearchTermExtractor
+    StatisticalSearchTermExtractor,
+    LearningSearchTermExtractor
 } = require('picpic-core')
 
 const GETTYAPI_KEY = config.get('gettyAPI.key')
@@ -18,6 +19,9 @@ if (!GETTYAPI_KEY || !GETTYAPI_SECRET) {
         'GETTYAPI_KEY and GETTYAPI_SECRET. Exiting.')
     process.exit(1)
 }
+
+const MODEL_TYPE = config.get('mlModel.type')
+const MODEL_PATH = config.get('mlModel.path')
 
 const credentials = {
     apiKey: GETTYAPI_KEY,
@@ -70,10 +74,7 @@ async function get2DPlotData(articleData, xKey, yKey, labelKey, filterSingleTerm
     }
 }
 
-async function pickImageStatistical (articleData, threshold, sortOrder) {
-    let articlePreprocessor = await preprocessArticle(articleData)
-    let searchTermExtractor = new StatisticalSearchTermExtractor(
-        articlePreprocessor.stemmedUniqueTerms, threshold)
+async function pickImage (searchTermExtractor, sortOrder) {
     let queryString = searchTermExtractor.generateSearchTerm()
     try {
         let apiRequest = Getty.searchimages()
@@ -97,11 +98,27 @@ async function pickImageStatistical (articleData, threshold, sortOrder) {
         }
     } catch (error) {
         console.log(error)
+        return null
     }
-} 
+}
+
+async function pickImageStatistical (articleData, threshold, sortOrder) {
+    let articlePreprocessor = await preprocessArticle(articleData)
+    let searchTermExtractor = new StatisticalSearchTermExtractor(
+        articlePreprocessor.stemmedUniqueTerms, threshold)
+    return await pickImage(searchTermExtractor, sortOrder)
+}
+
+async function pickImageMachineLearning (articleData, threshold, sortOrder) {
+    let articlePreprocessor = await preprocessArticle(articleData)
+    let searchTermExtractor = new LearningSearchTermExtractor(
+        MODEL_TYPE, MODEL_PATH, articlePreprocessor.stemmedUniqueTerms, threshold)
+    return await pickImage(searchTermExtractor, sortOrder)
+}
 
 module.exports= {
     matchKeywords,
     get2DPlotData,
-    pickImageStatistical
+    pickImageStatistical,
+    pickImageMachineLearning
 }

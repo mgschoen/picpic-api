@@ -5,6 +5,7 @@
         "requiredCollections": [ "articles", "keywords" ]
     },
     "port": 27112,
+    "validApproaches": [ "stat", "ml" ],
     "gettyAPI": {
         "key": "",
         "secret": "",
