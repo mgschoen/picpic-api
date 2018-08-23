@@ -112,6 +112,7 @@ function getArticle (id) {
 
             let articlesCollection = db.getCollection('articles')
             let keywordsCollection = db.getCollection('keywords')
+            let calaisCollection = db.getCollection('calais')
             let article = articlesCollection.findOne({$loki: id})
             if (article) {
 
@@ -128,6 +129,14 @@ function getArticle (id) {
                         return processedKW
                     })
                     result.leadImage.keywords = processedKeywords
+                }
+
+                if (result.calaisTags) {
+                    let calaisEntry = { ...calaisCollection.findOne({forArticle: result.$loki}) }
+                    delete calaisEntry.meta
+                    delete calaisEntry.$loki
+                    delete calaisEntry.forArticle
+                    result.calais = calaisEntry
                 }
 
                 resolve(result)

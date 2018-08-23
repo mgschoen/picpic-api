@@ -2,7 +2,7 @@
     "storage": {
         "path": "../gettygetter/data/",
         "filename": "storage.json",
-        "requiredCollections": [ "articles", "keywords" ]
+        "requiredCollections": [ "articles", "keywords", "calais" ]
     },
     "port": 27112,
     "validApproaches": [ "stat", "ml" ],
