@@ -1,12 +1,38 @@
 const config = require('config')
 const fs = require('fs')
 const Loki = require('lokijs')
-const lfsa = require('../node_modules/lokijs/src/loki-fs-structured-adapter')
+const lfsa = require('lokijs/src/loki-fs-structured-adapter')
 const folderSize = require('get-folder-size')
 
 const STORAGE_PATH = config.get('storage.path') // need to add env var support?
 const STORAGE_FILENAME = config.get('storage.filename')
 const STORAGE_REQUIRED_COLLECTIONS = config.get('storage.requiredCollections')
+
+const { reduceArticleList } = require('./storage-util')
+
+/**
+ * Splits `array` into windows of size `pageSize` and returns
+ * the window with index `page` along with some pagination metadata
+ * @param {array} array list of elements for pagination
+ * @param {number} page index of page to return
+ * @param {number} pageSize number of elements per page
+ * @returns {object}
+ */
+function paginate (array, page, pageSize) {
+    let firstElementIndex = pageSize * page
+    let resultSet = array.slice(firstElementIndex, firstElementIndex + pageSize)
+    return {
+        pagination: {
+            previous: page > 0,
+            next: ((pageSize * page) + pageSize) < array.length,
+            itemsTotal: array.length,
+            itemsInPage: resultSet.length,
+            pagesTotal: Math.ceil(array.length / pageSize),
+            pageIndex: page
+        },
+        result: resultSet
+    }
+}
 
 /**
  * Connect to the Loki.js database at the location specified
@@ -41,64 +67,6 @@ function initDatabase () {
             resolve(db)
         })
     })
-}
-
-/**
- * Removes a bunch of details from a list of articles
- * @param {array} articleList 
- * @returns {array}
- */
-function reduceArticleList (articleList) {
-    return articleList.map(doc => {
-        let { teaser, section, url, published, $loki } = doc
-        let reducedObject = { teaser, section, url, published, $loki }
-        reducedObject.article = {
-            headline: doc.article.headline,
-            images: doc.article.images
-        }
-        if (doc.gettyMeta) {
-            reducedObject = {
-                ...reducedObject,
-                gettyMeta: true,
-                leadImage: {
-                    id: doc.leadImage.id,
-                    title: doc.leadImage.title,
-                    url: doc.leadImage.url
-                }
-            }
-        }
-        if (doc.containsGettyIDInLeadImage) {
-            reducedObject.containsGettyIDInLeadImage = true
-        }
-        if (doc.containsGettyID) {
-            reducedObject.containsGettyID = true
-        }
-        return reducedObject
-    })
-}
-
-/**
- * Splits `array` into windows of size `pageSize` and returns
- * the window with index `page` along with some pagination metadata
- * @param {array} array list of elements for pagination
- * @param {number} page index of page to return
- * @param {number} pageSize number of elements per page
- * @returns {object}
- */
-function paginate (array, page, pageSize) {
-    let firstElementIndex = pageSize * page
-    let resultSet = array.slice(firstElementIndex, firstElementIndex + pageSize)
-    return {
-        pagination: {
-            previous: page > 0,
-            next: ((pageSize * page) + pageSize) < array.length,
-            itemsTotal: array.length,
-            itemsInPage: resultSet.length,
-            pagesTotal: Math.ceil(array.length / pageSize),
-            pageIndex: page
-        },
-        result: resultSet
-    }
 }
 
 /**

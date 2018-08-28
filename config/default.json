@@ -2,6 +2,9 @@
     "storage": {
         "path": "../gettygetter/data/",
         "filename": "storage.json",
+        "host": "localhost",
+        "port": 27017,
+        "db": "picpic",
         "requiredCollections": [ "articles", "keywords", "calais" ]
     },
     "port": 27112,

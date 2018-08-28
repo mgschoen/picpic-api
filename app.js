@@ -3,7 +3,7 @@ const app = express()
 const minimist = require('minimist')
 const config = require('config')
 
-const routeConfig = require('./modules/routes')
+const RouteConfig = require('./modules/routes')
 
 const PORT = config.get('port')
 
@@ -28,10 +28,17 @@ app.use(function(req, res, next) {
     next();
 });
 
-for (let route in routeConfig) {
-    app.get(route, routeConfig[route])
-}
-
-app.listen(PORT, () => {
-    console.log(`Picpic API listening on port ${PORT}`)
+// Init routes with storage
+RouteConfig().then(routeConfig => {
+    for (let route in routeConfig.routes) {
+        app.get(route, routeConfig.routes[route])
+    }
+    
+    // take off
+    app.listen(PORT, () => {
+        console.log(`Picpic API listening on port ${PORT}`)
+    })
+}).catch(error => {
+    console.log(error.message)
+    console.log(error.stack)
 })
