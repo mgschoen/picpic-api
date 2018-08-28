@@ -71,7 +71,7 @@ let RouteConfig = async function () {
                     let matcher = await matchKeywords(data)
                     res.json({
                         stats: matcher.stats,
-                        matchedTerms: matcher.matchedTerms
+                        matchedTerms: matcher.getKeywordTerms()
                     })
                 } else {
                     res.status(500).send(`Cannot match image keywords for article ${id}: Article has no lead image.`)

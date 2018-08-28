@@ -31,12 +31,7 @@ const credentials = {
 const Getty = new GettyClient(credentials)
 
 async function preprocessArticle (articleData) {
-    let paragraphs = articleData.article.paragraphs
-    paragraphs.unshift({
-        type: 'H1',
-        content: articleData.article.headline
-    })
-    let articlePreprocessor = new ArticlePreprocessor(paragraphs)
+    let articlePreprocessor = new ArticlePreprocessor(articleData)
     await articlePreprocessor.preprocess()
     return articlePreprocessor
 }
@@ -45,7 +40,7 @@ async function matchKeywords (articleData) {
     let articlePreprocessor = await preprocessArticle(articleData)
     let keywordsPreprocessor = new KeywordsPreprocessor(articleData.leadImage)
     await keywordsPreprocessor.preprocess()
-    let matcher = new Matcher(articlePreprocessor.getStemmedTerms(), 
+    let matcher = new Matcher(articlePreprocessor.getProcessedTerms(null, true), 
         keywordsPreprocessor.extendedKeywordList)
     matcher.match()
     return matcher
