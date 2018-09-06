@@ -70,7 +70,8 @@ async function get2DPlotData(articleData, xKey, yKey, labelKey, filterSingleTerm
 }
 
 async function pickImage (searchTermExtractor, sortOrder) {
-    let queryString = searchTermExtractor.generateSearchTerm()
+    let {query, consideredTerms} = searchTermExtractor.generateSearchTerm()
+    let queryString = query
     try {
         let apiRequest = Getty.searchimages()
             .withPhrase(queryString)
@@ -82,7 +83,7 @@ async function pickImage (searchTermExtractor, sortOrder) {
         let image = apiResponse.images[0]
         return {
             queryString,
-            queryTerms: searchTermExtractor.getKeywords(),
+            queryTerms: consideredTerms,
             image: !image ? null : {
                 id: image.id,
                 title: image.title,
@@ -100,14 +101,14 @@ async function pickImage (searchTermExtractor, sortOrder) {
 async function pickImageStatistical (articleData, threshold, sortOrder) {
     let articlePreprocessor = await preprocessArticle(articleData)
     let searchTermExtractor = new StatisticalSearchTermExtractor(
-        articlePreprocessor.stemmedUniqueTerms, threshold)
+        articlePreprocessor.getProcessedTerms(), threshold)
     return await pickImage(searchTermExtractor, sortOrder)
 }
 
 async function pickImageMachineLearning (articleData, threshold, sortOrder) {
     let articlePreprocessor = await preprocessArticle(articleData)
     let searchTermExtractor = new LearningSearchTermExtractor(
-        MODEL_TYPE, MODEL_PATH, articlePreprocessor.stemmedUniqueTerms, threshold)
+        MODEL_TYPE, MODEL_PATH, articlePreprocessor.getProcessedTerms(), threshold)
     return await pickImage(searchTermExtractor, sortOrder)
 }
 
