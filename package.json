@@ -1,6 +1,6 @@
 {
   "name": "picpic-api",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Interface for interacting with a corpus of BBC articles collected with gettygetter",
   "main": "app.js",
   "repository": "https://github.com/mgschoen/picpic-api.git",
