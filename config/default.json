@@ -8,7 +8,7 @@
         "requiredCollections": [ "articles", "keywords", "calais" ]
     },
     "port": 27112,
-    "validApproaches": [ "stat", "ml" ],
+    "validApproaches": [ "stat", "ml", "ml-entities" ],
     "gettyAPI": {
         "key": "",
         "secret": "",

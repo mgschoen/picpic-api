@@ -34,8 +34,10 @@ let RouteConfig = async function () {
             let data
             switch (approach) {
                 case 'ml':
-                    data = await pickImageMachineLearning(result, threshold, sortOrder)
+                    data = await pickImageMachineLearning(result, threshold, sortOrder, false)
                     break
+                case 'ml-entities':
+                    data = await pickImageMachineLearning(result, threshold, sortOrder, true)
                 case 'stat':
                 default:
                     data = await pickImageStatistical(result, threshold, sortOrder)
