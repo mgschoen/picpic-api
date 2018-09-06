@@ -62,3 +62,6 @@ typings/
 
 # local config
 config/local.json
+
+# Visual Studio Code
+.vscode
