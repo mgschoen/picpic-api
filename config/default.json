@@ -9,7 +9,10 @@
     },
     "port": 27112,
     "validApproaches": [ "stat", "ml", "ml-entities" ],
-    "predictionFeatures": [ "tf", "fo", "calais-entity" ],
+    "prediction": {
+        "features": [ "tf", "fo", "calais-entity" ],
+        "normalizeFeatures": true
+    },
     "gettyAPI": {
         "key": "",
         "secret": "",

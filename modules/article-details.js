@@ -22,7 +22,8 @@ if (!GETTYAPI_KEY || !GETTYAPI_SECRET) {
 
 const MODEL_TYPE = config.get('mlModel.type')
 const MODEL_PATH = config.get('mlModel.path')
-const PREDICTION_FEATURES = config.get('predictionFeatures')
+const PREDICTION_FEATURES = config.get('prediction.features')
+const NORMALIZE_FEATURES = config.get('prediction.normalizeFeatures')
 
 const credentials = {
     apiKey: GETTYAPI_KEY,
@@ -72,7 +73,10 @@ async function get2DPlotData(articleData, xKey, yKey, labelKey, filterSingleTerm
 
 async function pickImage (searchTermExtractor, sortOrder, entitiesOnly) {
     let {query, consideredTerms} = 
-        searchTermExtractor.generateSearchTerm(entitiesOnly, PREDICTION_FEATURES)
+        searchTermExtractor.generateSearchTerm(
+            entitiesOnly, 
+            PREDICTION_FEATURES, 
+            NORMALIZE_FEATURES)
     let queryString = query
     try {
         let apiRequest = Getty.searchimages()
