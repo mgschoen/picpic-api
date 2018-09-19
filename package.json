@@ -18,6 +18,6 @@
     "lokijs": "^1.5.5",
     "minimist": "^1.2.0",
     "mongodb": "^3.1.4",
-    "picpic-core": "https://github.com/mgschoen/picpic-core.git#v0.5.2"
+    "picpic-core": "https://github.com/mgschoen/picpic-core.git#v0.5.3"
   }
 }
