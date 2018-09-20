@@ -25,6 +25,8 @@ const MODEL_PATH = config.get('mlModel.path')
 const PREDICTION_FEATURES = config.get('prediction.features')
 const NORMALIZE_FEATURES = config.get('prediction.normalizeFeatures')
 
+console.log(PREDICTION_FEATURES)
+
 const credentials = {
     apiKey: GETTYAPI_KEY,
     apiSecret: GETTYAPI_SECRET
@@ -71,12 +73,13 @@ async function get2DPlotData(articleData, xKey, yKey, labelKey, filterSingleTerm
     }
 }
 
-async function pickImage (searchTermExtractor, sortOrder, entitiesOnly) {
+async function pickImage (searchTermExtractor, sortOrder, entitiesOnly, ignoreSuperterms) {
     let {query, consideredTerms} = 
         searchTermExtractor.generateSearchTerm(
             entitiesOnly, 
             PREDICTION_FEATURES, 
-            NORMALIZE_FEATURES)
+            NORMALIZE_FEATURES,
+            ignoreSuperterms)
     let queryString = query
     try {
         let apiRequest = Getty.searchimages()
@@ -107,7 +110,7 @@ async function pickImage (searchTermExtractor, sortOrder, entitiesOnly) {
 async function pickImageStatistical (articleData, threshold, sortOrder) {
     let articlePreprocessor = await preprocessArticle(articleData)
     let searchTermExtractor = new StatisticalSearchTermExtractor(
-        articlePreprocessor.getProcessedTerms(), threshold)
+        articlePreprocessor.getProcessedTerms(null, false, true), threshold)
     return await pickImage(searchTermExtractor, sortOrder)
 }
 
@@ -115,7 +118,7 @@ async function pickImageMachineLearning (articleData, threshold, sortOrder, enti
     let articlePreprocessor = await preprocessArticle(articleData)
     let searchTermExtractor = new LearningSearchTermExtractor(
         MODEL_TYPE, MODEL_PATH, articlePreprocessor.getProcessedTerms(), threshold)
-    return await pickImage(searchTermExtractor, sortOrder, entitiesOnly)
+    return await pickImage(searchTermExtractor, sortOrder, entitiesOnly, true)
 }
 
 module.exports= {
