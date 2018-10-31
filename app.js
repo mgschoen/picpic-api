@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 const minimist = require('minimist')
 const config = require('config')
 
@@ -28,10 +29,17 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Parse request bodies as text
+app.use(bodyParser.text())
+
 // Init routes with storage
 RouteConfig().then(routeConfig => {
-    for (let route in routeConfig.routes) {
-        app.get(route, routeConfig.routes[route])
+    let routes = routeConfig.routes
+    for (let route in routes.get) {
+        app.get(route, routes.get[route])
+    }
+    for (let route in routes.post) {
+        app.post(route, routes.post[route])
     }
     
     // take off
