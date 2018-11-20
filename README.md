@@ -4,4 +4,4 @@ Interface for interacting with a corpus of BBC articles collected with [gettyget
 
 ## Documentation
 
-Docs can be found at [mgschoen.github.io/picpic-api-documentation](https://mgschoen.github.io/picpic-api-documentation).
+Docs can be found at [mgschoen.github.io/picpic-api-docs](https://mgschoen.github.io/picpic-api-docs).
