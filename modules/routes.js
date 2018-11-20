@@ -30,17 +30,20 @@ let RouteConfig = async function () {
         if (['best_match', 'most_popular', 'newest'].indexOf(sortOrder) < 0) {
             sortOrder = 'most_popular'
         }
+        let numImages = parseInt(req.query.numImages) || 1
+        if (numImages < 1) numImages = 1
+        if (numImages > 20) numImages = 20
         let data
         switch (approach) {
             case 'ml':
-                data = await pickImageMachineLearning(articleObject, threshold, sortOrder, false)
+                data = await pickImageMachineLearning(articleObject, threshold, sortOrder, false, numImages)
                 break
             case 'ml-entities':
-                data = await pickImageMachineLearning(articleObject, threshold, sortOrder, true)
+                data = await pickImageMachineLearning(articleObject, threshold, sortOrder, true, numImages)
                 break
             case 'stat':
             default:
-                data = await pickImageStatistical(articleObject, threshold, sortOrder)
+                data = await pickImageStatistical(articleObject, threshold, sortOrder, numImages)
         }
         res.json(data)
     }

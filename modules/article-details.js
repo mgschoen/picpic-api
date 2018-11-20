@@ -73,7 +73,8 @@ async function get2DPlotData(articleData, xKey, yKey, labelKey, filterSingleTerm
     }
 }
 
-async function pickImage (searchTermExtractor, sortOrder, entitiesOnly, ignoreSuperterms) {
+async function pickImage (searchTermExtractor, sortOrder, entitiesOnly, ignoreSuperterms, numImages) {
+    const NUM_IMAGES = numImages || 1
     let {query, consideredTerms} = 
         searchTermExtractor.generateSearchTerm(
             entitiesOnly, 
@@ -89,17 +90,20 @@ async function pickImage (searchTermExtractor, sortOrder, entitiesOnly, ignoreSu
             apiRequest.withResponseField(field)
         }
         let apiResponse = await apiRequest.execute()
-        let image = apiResponse.images[0]
+        let rawImages = apiResponse.images.slice(0, NUM_IMAGES)
+        let images = rawImages.map(img => {
+            return {
+                id: img.id,
+                title: img.title,
+                caption: img.caption,
+                previewUrl: img.display_sizes.filter(s => s.name === 'comp')[0].uri,
+                detailUrl: img.referral_destinations.filter(d => d.site_name === 'gettyimages')[0].uri
+            }
+        })
         return {
             queryString,
             queryTerms: consideredTerms,
-            image: !image ? null : {
-                id: image.id,
-                title: image.title,
-                caption: image.caption,
-                previewUrl: image.display_sizes.filter(s => s.name === 'comp')[0].uri,
-                detailUrl: image.referral_destinations.filter(d => d.site_name === 'gettyimages')[0].uri
-            }
+            images
         }
     } catch (error) {
         console.log(error)
@@ -107,18 +111,18 @@ async function pickImage (searchTermExtractor, sortOrder, entitiesOnly, ignoreSu
     }
 }
 
-async function pickImageStatistical (articleData, threshold, sortOrder) {
+async function pickImageStatistical (articleData, threshold, sortOrder, numImages) {
     let articlePreprocessor = await preprocessArticle(articleData)
     let searchTermExtractor = new StatisticalSearchTermExtractor(
         articlePreprocessor.getProcessedTerms(null, false, true), threshold)
-    return await pickImage(searchTermExtractor, sortOrder)
+    return await pickImage(searchTermExtractor, sortOrder, false, false, numImages)
 }
 
-async function pickImageMachineLearning (articleData, threshold, sortOrder, entitiesOnly) {
+async function pickImageMachineLearning (articleData, threshold, sortOrder, entitiesOnly, numImages) {
     let articlePreprocessor = await preprocessArticle(articleData)
     let searchTermExtractor = new LearningSearchTermExtractor(
         MODEL_TYPE, MODEL_PATH, articlePreprocessor.getProcessedTerms(), threshold)
-    return await pickImage(searchTermExtractor, sortOrder, entitiesOnly, true)
+    return await pickImage(searchTermExtractor, sortOrder, entitiesOnly, true, numImages)
 }
 
 module.exports= {
