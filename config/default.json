@@ -27,5 +27,9 @@
             "preview",
             "thumb"
         ]
+    },
+    "calais": {
+        "baseUrl": "https://api.thomsonreuters.com/permid/calais",
+        "key": ""
     }
 }

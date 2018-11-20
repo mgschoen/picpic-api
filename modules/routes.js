@@ -7,6 +7,7 @@ const {
     pickImageStatistical,
     pickImageMachineLearning
 } = require('./article-details')
+const getCalaisData = require('./calais')
 
 const VALID_APPROACHES = config.get('validApproaches')
 
@@ -53,7 +54,7 @@ let RouteConfig = async function () {
         })
     }
 
-    this.customPicpic = (req, res) => {
+    this.customPicpic = async (req, res) => {
         let plainText = req.body
         let paragraphs = plainText.split('\n')
             .map(text => {return {type: 'P', content: text.trim()}})
@@ -64,9 +65,15 @@ let RouteConfig = async function () {
                 paragraphs
             }
         }
-        req.params.approach = 'stat'
+        if (['ml', 'ml-entities'].indexOf(req.params.approach) >= 0) {
+            try {
+                article.calais = await getCalaisData(plainText)
+            } catch (e) {
+                article.calais = {}
+                console.info(`[Info] Performing ML approach without Calais tags due to the following reason: ${e.message}`)
+            }
+        }
         this.picpic(article, req, res)
-        //res.send('You wrote: ' + plainText)
     }
     
     this.routes = {
@@ -173,9 +180,9 @@ let RouteConfig = async function () {
 
         post: {
             // Corpus independent
-            '/custom/picpic/': this.customPicpic,
-            '/custom/picpic/:threshold': this.customPicpic,
-            '/custom/picpic/:threshold/:sortorder': this.customPicpic
+            '/custom/picpic/:approach': this.customPicpic,
+            '/custom/picpic/:approach/:threshold': this.customPicpic,
+            '/custom/picpic/:approach/:threshold/:sortorder': this.customPicpic
         }
     }
     return this

@@ -2,5 +2,8 @@
     "gettyAPI": {
         "key": "GETTYAPI_KEY",
         "secret": "GETTYAPI_SECRET"
+    },
+    "calais": {
+        "key": "CALAIS_KEY"
     }
 }
