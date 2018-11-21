@@ -22,11 +22,11 @@ let RouteConfig = async function () {
             res.status(500).send(`"${approach}" is not a valid approach`)
             return
         }
-        let threshold = parseFloat(req.params.threshold)
+        let threshold = parseFloat(req.query.threshold)
         if (isNaN(threshold) || threshold < 0 || threshold > 1) {
             threshold = 0.5
         }
-        let sortOrder = req.params.sortorder || 'most_popular'
+        let sortOrder = req.query.sortOrder || 'most_popular'
         if (['best_match', 'most_popular', 'newest'].indexOf(sortOrder) < 0) {
             sortOrder = 'most_popular'
         }
@@ -133,8 +133,6 @@ let RouteConfig = async function () {
             },
         
             '/article/:id/picpic/:approach': this.articlePicpic,
-            '/article/:id/picpic/:approach/:threshold': this.articlePicpic,
-            '/article/:id/picpic/:approach/:threshold/:sortorder': this.articlePicpic,
         
             // Listing and searching articles
             '/articles/:page': (req, res) => {
@@ -183,9 +181,7 @@ let RouteConfig = async function () {
 
         post: {
             // Corpus independent
-            '/custom/picpic/:approach': this.customPicpic,
-            '/custom/picpic/:approach/:threshold': this.customPicpic,
-            '/custom/picpic/:approach/:threshold/:sortorder': this.customPicpic
+            '/custom/picpic/:approach': this.customPicpic
         }
     }
     return this
