@@ -376,6 +376,10 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
+ejs@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
+
 encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
@@ -1047,9 +1051,9 @@ performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
 
-"picpic-core@https://github.com/mgschoen/picpic-core.git#v0.5.4":
-  version "0.5.4"
-  resolved "https://github.com/mgschoen/picpic-core.git#fcfdbe0e4f9e33563152994b4971bdf151b7c87c"
+"picpic-core@https://github.com/mgschoen/picpic-core.git#v0.5.7":
+  version "0.5.7"
+  resolved "https://github.com/mgschoen/picpic-core.git#6eb7fed3bb855052e39a45964c43e66ccf3bc7cc"
   dependencies:
     app-root-path "^2.1.0"
     boxen "^1.3.0"
@@ -1057,6 +1061,7 @@ performance-now@^2.1.0:
     cli-graph "^3.2.2"
     cli-table "^0.3.1"
     clui "^0.3.6"
+    ejs "^2.6.1"
     fuzzyset.js "^0.0.7"
     libsvm-js "^0.2.1"
     lokijs "^1.5.5"
