@@ -13,6 +13,8 @@
         "features": [ "tf", "fo", "calais-entity" ],
         "normalizeFeatures": true
     },
+    "validImageClients": ["getty", "bing"],
+    "imageClient": "getty",
     "gettyAPI": {
         "key": "",
         "secret": "",
