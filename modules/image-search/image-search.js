@@ -21,9 +21,9 @@ let ImageSearch = function () {
     }
 }
 
-ImageSearch.prototype.search = async function (query, sortOrder) {
+ImageSearch.prototype.search = async function (query, sortOrder, numImages) {
     if (this.client.search) {
-        return await this.client.search(query, sortOrder)
+        return await this.client.search(query, sortOrder, numImages)
     } else {
         throw new Error('Image client must implement search() method')
     }

@@ -18,7 +18,8 @@ let GettyClient = function () {
         apiSecret: GETTYAPI_SECRET
     })
     
-    this.search = async function (query, sortOrder) {
+    this.search = async function (query, sortOrder, numImages) {
+        const NUM_IMAGES = numImages || 1
         try {
             let apiRequest = this.api.searchimages()
                 .withPhrase(query)
