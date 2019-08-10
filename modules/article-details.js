@@ -16,7 +16,9 @@ const MODEL_PATH = config.get('mlModel.path')
 const PREDICTION_FEATURES = config.get('prediction.features')
 const NORMALIZE_FEATURES = config.get('prediction.normalizeFeatures')
 
-console.log(PREDICTION_FEATURES)
+console.log()
+console.log(`Loading ${MODEL_TYPE} model from ${MODEL_PATH}`)
+console.log(`Using features: ${PREDICTION_FEATURES.toString()}`)
 
 async function preprocessArticle (articleData) {
     let articlePreprocessor = new ArticlePreprocessor(articleData)

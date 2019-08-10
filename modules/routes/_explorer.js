@@ -1,84 +1,25 @@
-const config = require('config')
-
-const MongoStorage = require('./storage-mongo')
+const MongoStorage = require('../storage-mongo')
 const { 
     matchKeywords, 
-    get2DPlotData, 
-    pickImageStatistical,
-    pickImageMachineLearning
-} = require('./article-details')
-const getCalaisData = require('./calais')
+    get2DPlotData
+} = require('../article-details')
 
-const VALID_APPROACHES = config.get('validApproaches')
+function ExplorerRoutes (picpicFunction) {
 
-let RouteConfig = async function () {
-
-    this.mongo = new MongoStorage()
-    await this.mongo.init()
-
-    this.picpic = async (articleObject, req, res) => {
-        let approach = req.params.approach
-        if (VALID_APPROACHES.indexOf(approach) < 0) {
-            res.status(500).send(`"${approach}" is not a valid approach`)
-            return
-        }
-        let threshold = parseFloat(req.query.threshold)
-        if (isNaN(threshold) || threshold < 0 || threshold > 1) {
-            threshold = 0.5
-        }
-        let sortOrder = req.query.sortOrder || 'most_popular'
-        if (['best_match', 'most_popular', 'newest'].indexOf(sortOrder) < 0) {
-            sortOrder = 'most_popular'
-        }
-        let numImages = parseInt(req.query.numImages) || 1
-        if (numImages < 1) numImages = 1
-        if (numImages > 20) numImages = 20
-        let data
-        switch (approach) {
-            case 'ml':
-                data = await pickImageMachineLearning(articleObject, threshold, sortOrder, false, numImages)
-                break
-            case 'ml-entities':
-                data = await pickImageMachineLearning(articleObject, threshold, sortOrder, true, numImages)
-                break
-            case 'stat':
-            default:
-                data = await pickImageStatistical(articleObject, threshold, sortOrder, numImages)
-        }
-        res.json(data)
+    this.init = async function () {
+        this.mongo = new MongoStorage()
+        await this.mongo.init()
     }
 
     this.articlePicpic = (req, res) => {
         let id = req.params.id
         this.mongo.getArticle(id).then(async result => {
-            this.picpic(result, req, res)
+            picpicFunction(result, req, res)
         }).catch(error => {
             res.status(500).send(`An error occured: ${error.message}`)
         })
     }
 
-    this.customPicpic = async (req, res) => {
-        let plainText = req.body
-        let paragraphs = plainText.split('\n')
-            .map(text => {return {type: 'P', content: text.trim()}})
-            .filter(paragraph => paragraph.content.length > 0)
-        let article = {
-            article: {
-                headline: '',
-                paragraphs
-            }
-        }
-        if (['ml', 'ml-entities'].indexOf(req.params.approach) >= 0) {
-            try {
-                article.calais = await getCalaisData(plainText)
-            } catch (e) {
-                article.calais = {}
-                console.info(`[Info] Performing ML approach without Calais tags due to the following reason: ${e.message}`)
-            }
-        }
-        this.picpic(article, req, res)
-    }
-    
     this.routes = {
         get: {
 
@@ -177,15 +118,10 @@ let RouteConfig = async function () {
                     console.log(error)
                 })
             }
-        },
-
-        post: {
-            // Corpus independent
-            '/custom/picpic/:approach': this.customPicpic
         }
     }
+
     return this
-} 
+}
 
-module.exports = RouteConfig
-
+module.exports = ExplorerRoutes

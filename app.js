@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const minimist = require('minimist')
 const config = require('config')
 
-const RouteConfig = require('./modules/routes')
+const RouteConfig = require('./modules/routes/routes')
 
 const PORT = config.get('port')
 
@@ -35,15 +35,19 @@ app.use(bodyParser.text())
 // Init routes with storage
 RouteConfig().then(routeConfig => {
     let routes = routeConfig.routes
+    console.log()
     for (let route in routes.get) {
+        console.log(`Intialising GET route ${route}`)
         app.get(route, routes.get[route])
     }
     for (let route in routes.post) {
+        console.log(`Intialising POST route ${route}`)
         app.post(route, routes.post[route])
     }
     
     // take off
     app.listen(PORT, () => {
+        console.log()
         console.log(`Picpic API listening on port ${PORT}`)
     })
 }).catch(error => {

@@ -49,6 +49,7 @@ function StorageMongo () {
 
 StorageMongo.prototype.init = async function () {
     let connectionString = `mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}`
+    console.log()
     console.log(`Connecting to MongoDB instance ${connectionString} ...`)
     let client = await MongoClient.connect(connectionString, {useNewUrlParser: true})
     this.db = client.db()
