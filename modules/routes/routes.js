@@ -65,7 +65,11 @@ let RouteConfig = async function () {
     }
     
     this.routes = {
-        get: {},
+        get: {
+            "/awake": (req, res) => {
+                res.json({awake: true})
+            }
+        },
         post: {
             // Corpus independent
             '/custom/picpic/:approach': this.customPicpic
