@@ -5,5 +5,8 @@
     },
     "calais": {
         "key": "CALAIS_KEY"
+    },
+    "azure": {
+        "key": "AZURE_KEY"
     }
 }
