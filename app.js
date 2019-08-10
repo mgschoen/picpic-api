@@ -6,7 +6,7 @@ const config = require('config')
 
 const RouteConfig = require('./modules/routes/routes')
 
-const PORT = config.get('port')
+const PORT = process.env.PORT || config.get('port')
 
 let args = minimist(process.argv.slice(2)) || {}
 for (let arg in args) {
