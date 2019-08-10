@@ -20,7 +20,6 @@ let BingClient = function () {
         let rawImages = await this.api.imagesOperations.search(query, {
             count: numImages
         })
-        console.log(rawImages)
         return rawImages.value.map(img => {
             return {
                 id: img.imageId,
