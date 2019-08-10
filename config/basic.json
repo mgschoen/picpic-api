@@ -1,0 +1,11 @@
+{
+    "mlModel": {
+        "type": "ffnn",
+        "path": "./sample-models/ffnn.tf-fo-calais.model"
+    },
+    "prediction": {
+        "features": [ "tf", "fo", "calais-entity" ]
+    },
+    "imageClient": "bing",
+    "mode": "basic"
+}
