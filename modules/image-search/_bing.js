@@ -18,7 +18,8 @@ let BingClient = function () {
     
     this.search = async function (query, sortOrder, numImages) {
         let rawImages = await this.api.imagesOperations.search(query, {
-            count: numImages
+            count: numImages,
+            imageType: 'Photo'
         })
         return rawImages.value.map(img => {
             return {
