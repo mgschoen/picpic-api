@@ -17,7 +17,7 @@
     "get-folder-size": "^2.0.0",
     "gettyimages-api": "^3.1.1",
     "lokijs": "^1.5.5",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "mongodb": "^3.1.4",
     "ms-rest-azure": "^3.0.0",
     "picpic-core": "https://github.com/mgschoen/picpic-core.git#v0.5.7",
